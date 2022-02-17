@@ -1,0 +1,28 @@
+.pokeCard{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-gap: 1rem;
+    border: 2px solid #ddd;
+    margin: 15px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    color: #ddd;
+    background-color: rgba(81, 155, 253, 0.219);
+}
+
+.image{
+    width: 60px;
+    height: 60px;
+    object-position: center;
+    cursor: pointer;
+    object-fit: cover;
+    margin-right: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin-top: 10px;
+    margin: auto;
+}

@@ -1,0 +1,13 @@
+.cards{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    column-width: 50px;
+    grid-gap: 1rem;
+    border: 1px solid #ddd;
+    margin: 15px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    justify-content: center;
+}
