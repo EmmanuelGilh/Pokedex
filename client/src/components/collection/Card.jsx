@@ -4,15 +4,19 @@ import placeholder from '../../media/whos-that-poke.gif'
 import { useNavigate } from 'react-router-dom'
 
 
-export default function Card({ id, name, image, type }) {
+export default function Card({ id, name, image, type, getDetails }) {
 
     const navigate = useNavigate()
 
+    function goToDetails() {
+        navigate(`/${id}/details`)
+        getDetails && getDetails(id)
+    }
 
     return (
         <div className={styles.pokeCard}>
 
-            <img className={styles.image} src={image === 'gif' ? placeholder : image} alt={name} onClick={() => navigate(`/${id}/details`)} />
+            <img className={styles.image} src={image === 'gif' ? placeholder : image} alt={name} onClick={goToDetails} />
 
 
             <h2>
