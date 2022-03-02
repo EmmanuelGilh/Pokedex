@@ -11,16 +11,16 @@ export const SET_OPTIONS = 'SET_OPTIONS'
 export function getAllPokes(filters) {
     return async dispatch => {
 
-        filters = {
-            isApi: filters?.isApi || true,
-            isDataBase: filters?.isDataBase || true,
-            ...filters
-        }
-
+        // filters = {
+        //     isApi: filters?.isApi,
+        //     isDataBase: filters?.isDataBase,
+        //     ...filters
+        // }
+        console.log(filters)
         const stringFilters = new URLSearchParams(filters).toString()
+        console.log(stringFilters)
 
         const request = await axios.get(`http://localhost:3001/pokemons${stringFilters ? '?' + stringFilters : ''}`)
-        // const request = await axios.get(`http://localhost:3001/pokemons?attack=${filters.isApi || true}`)
 
         dispatch({ type: "GET_POKES", payload: request.data })
         console.log('despachado')
@@ -36,6 +36,12 @@ export function getDetails(id) {
 
 export function getSearch(string, filters) {
     return async dispatch => {
+
+        // filters = {
+        //     isApi: filters?.isApi,
+        //     isDataBase: filters?.isDataBase,
+        //     ...filters
+        // }
 
         const stringFilters = new URLSearchParams(filters).toString()
 

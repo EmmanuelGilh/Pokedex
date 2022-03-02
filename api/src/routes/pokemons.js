@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const axios = require('axios');
 require('dotenv').config();
-const { Pokemon } = require('../db.js');
+const { Pokemon, Type } = require('../db.js');
 
 
 
@@ -37,8 +37,8 @@ function applyFilters(pokemons, type, order, attack) {
 
 router.get('/', async (req, res) => {
     const { name: nameQuery,
-        isApi = isApi === undefined ? 'true' : isApi,
-        isDataBase = isDataBase === undefined ? 'true' : isDataBase,
+        isApi,
+        isDataBase,
         type, order, attack } = req.query
 
     try {
@@ -58,17 +58,66 @@ router.get('/', async (req, res) => {
 
 
         if (isDataBase === 'true') {
-            requestDB = []
+
+            requestDB = await Pokemon.findAll({
+                include: Type
+            });
+            //parsea el objeto
+            requestDB = JSON.stringify(requestDB);
+            requestDB = JSON.parse(requestDB);
+            //convierte los tipos
+            requestDB = requestDB.reduce((acc, el) => acc.concat({
+                ...el,
+                types: el.types.map(t => t.name)
+            }), [])
+
+            requestDB = requestDB.map(pokemon => {
+                const statsObj = [{ "base_stat": pokemon.hp }, { "base_stat": pokemon.attack }, { "base_stat": pokemon.defense }, 3, 4, { "base_stat": pokemon.speed }]
+                return {
+                    data: {
+                        id: pokemon.idDB,
+                        name: pokemon.name,
+                        height: pokemon.height,
+                        weight: pokemon.weight,
+                        types: pokemon.types.map(t => {
+                            return { type: { name: t } }
+                        }),
+                        stats: statsObj,
+                        sprites: {
+                            versions: {
+                                'generation-v': {
+                                    'black-white': {
+                                        animated: {
+                                            "front_default": pokemon.image
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            })
         }
 
         if (isApi === 'false' && isDataBase === 'false') {
             return res.send(['No Pokemons Available.'])
         }
 
-        promesaCumplida = requestDB.concat(promesaCumplida)
+        // si existe request db se concatena
+        if (requestDB) {
+            promesaCumplida = promesaCumplida ? requestDB.concat(promesaCumplida) : requestDB
+        }
 
         if (nameQuery) {
+            if (!Array.isArray(promesaCumplida) || promesaCumplida.length === 0) {
+                return res.send(['No Pokemons Available.'])
+            }
             promesaCumplida = promesaCumplida.filter(pokemon => pokemon.data.name.toLowerCase().includes(nameQuery.toLowerCase()))
+        }
+
+
+        if (!promesaCumplida.length) {
+            return res.send(['No Pokemons Available.'])
         }
 
         promesaCumplida = await promesaCumplida.map((pokemon) => {
@@ -93,7 +142,7 @@ router.get('/', async (req, res) => {
 
         res.send(applyFilters(promesaCumplida, type, order, attack))
     } catch (error) {
-        console.log(error)
+        console.log('error', error)
     }
 })
 

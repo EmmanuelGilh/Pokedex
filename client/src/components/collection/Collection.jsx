@@ -18,13 +18,18 @@ function Collection({ pokemons, getAllPokes, searchResults, getDetails, optionsS
     const cardsPerPage = 12;
 
 
+
     //get inicial
     useEffect(() => {
+
+        const filters = {
+            isApi: 'true',
+            isDataBase: 'true'
+        }
         if (!pokemons) {
-            return getAllPokes();
+            return getAllPokes(filters);
         }
     }, [pokemons, getAllPokes])
-
 
     //setea display
     useEffect(() => {
@@ -40,7 +45,7 @@ function Collection({ pokemons, getAllPokes, searchResults, getDetails, optionsS
 
     // Paginado
     let index = 0
-    const paginate = (pageNumber) => setPage(pageNumber)
+    const paginate = (number) => setPage(number)
     useEffect(() => {
         const indexOfLastPost = page * cardsPerPage
         const indexOfFirstPost = indexOfLastPost - cardsPerPage
@@ -100,7 +105,7 @@ export default connect(
     }),
 
     dispatch => ({
-        getAllPokes: () => dispatch(getAllPokes()),
+        getAllPokes: (filters) => dispatch(getAllPokes(filters)),
         getSearch: (string) => dispatch(getSearch(string)),
         getDetails: (id) => dispatch(getDetails(id)),
         setOptionsSelected: () => dispatch(setOptionsSelected)

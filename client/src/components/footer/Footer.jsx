@@ -3,8 +3,8 @@ import styles from './Footer.module.css';
 
 export default function Footer({ cardsPerPage, totalPosts, paginate }) {
     const pageNumbers = [];
-    for (let i = 1; i <= Math.ceil(totalPosts / cardsPerPage); i++) {
-        pageNumbers.push(i);
+    for (let n = 1; n <= Math.ceil(totalPosts / cardsPerPage); n++) {
+        pageNumbers.push(n);
     }
 
     return (

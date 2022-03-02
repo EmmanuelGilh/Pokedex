@@ -14,11 +14,20 @@ function DetailsPokes({ pokeDetails }) {
 
     const { id } = useParams()
 
-
     useEffect(() => {
-        if (pokeDetails && pokeDetails.id === parseInt(id)) // si ya tengo una respuesta del back
+        if ((pokeDetails && pokeDetails.id === parseInt(id)) || // si ya tengo una respuesta del back
+            (pokeDetails && pokeDetails.id === id.toString())) {
             setLoading(false)
+        }
     }, [pokeDetails, id])
+    console.log('pokeDetails', pokeDetails)
+
+    function buildType(api, db) {
+        if (api) {
+            return api.join(', ')
+        }
+        return db.join(', ')
+    }
 
     return (
         <div className={styles.bg}>
@@ -28,7 +37,8 @@ function DetailsPokes({ pokeDetails }) {
                         <img className={styles.image} src={pokeDetails?.image} alt={pokeDetails?.name} />
                         <h2>#{!!pokeDetails?.id ? pokeDetails.id.toString().padStart(3, 0) : ""}
                             <br />NAME: {!!pokeDetails.name ? pokeDetails.name.toUpperCase() : ""}
-                            <br />Type: {!!pokeDetails?.type ? pokeDetails.type.join(', ').toUpperCase() : ""}
+                            <br />Type: {buildType(pokeDetails?.type, pokeDetails?.types)}
+                            {/* <br />Type: {!!pokeDetails?.type ? pokeDetails.type.join(', ').toUpperCase() : ""} */}
                         </h2>
                         <h3>STATS:
                             <br />HP: {pokeDetails?.hp}
@@ -50,7 +60,6 @@ function DetailsPokes({ pokeDetails }) {
     )
 }
 
-// NAME: {!!pokeDetails.name ? <p>{pokeDetails.name.toUpperCase()}</p> : <p className="clasePropia">cargando...</p>}
 
 
 export default connect(

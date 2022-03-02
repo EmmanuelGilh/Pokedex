@@ -2,7 +2,7 @@ const { Router } = require('express');
 const axios = require('axios');
 // require('dotenv').config();
 // const { API_KEY } = process.env;
-const { Pokemon } = require('../db.js');
+const { Pokemon, Type } = require('../db.js');
 
 const router = Router({ mergeParams: true });
 
@@ -10,6 +10,23 @@ router.get('/', async (req, res) => {
     const { id } = req.params
     if (id) {
         try {
+            if (id.includes('DB')) {
+                let requestDB = await Pokemon.findAll({
+                    include: Type
+                })
+                //parsea el objeto
+                requestDB = JSON.stringify(requestDB);
+                requestDB = JSON.parse(requestDB);
+                //convierte los tipos
+                requestDB = requestDB.reduce((acc, el) => acc.concat({
+                    ...el,
+                    types: el.types.map(t => t.name)
+                }), [])
+                // requestDB = requestDB.filter(pokemon => id === pokemon.idDB)
+                // console.log('requestDB', requestDB)
+                return res.send(requestDB[0]);
+            }
+
             const request = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
             const pokemonFound = request.data
 

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import styles from './PokeCreator.module.css';
 import { Link } from 'react-router-dom';
 import { fetchAndMapTypes } from '../../redux/actions'
+import pokemonCreado from '../../media/pokemonCreado.gif'
 
 
 
@@ -58,7 +59,6 @@ function PokeCreator({ typesFromDB, fetchAndMapTypes }) {
             [inputName]: inputValue
         });
     }
-    console.log(state)
 
     function handleTypes(e) {
         e.preventDefault();
@@ -67,6 +67,7 @@ function PokeCreator({ typesFromDB, fetchAndMapTypes }) {
         const value = select.options[select.selectedIndex].value;
 
         setTypes([...types, value])
+
     }
 
     function removeType(event) {
@@ -76,6 +77,38 @@ function PokeCreator({ typesFromDB, fetchAndMapTypes }) {
     }
 
     let id = 0
+
+    function handleSubmit(e) {
+        e.preventDefault();
+
+
+
+        if (types.length && state.name.length && state.hp.length && state.attack.length &&
+            state.defense.length && state.speed.length && state.height.length && state.weight.length) {
+            setEditing(false)
+            fetch('http://localhost:3001/creator', {
+                method: 'POST',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify({
+                    ...state,
+                    type: types
+                })
+            })
+            setTypes([])
+            setState({
+                name: '',
+                type: [],
+                hp: '',
+                attack: '',
+                defense: '',
+                speed: '',
+                height: '',
+                weight: '',
+                image: 'img',
+            })
+        }
+        else alert('All fields are required.')
+    }
 
     return (
         (editing) ? (
@@ -143,13 +176,14 @@ function PokeCreator({ typesFromDB, fetchAndMapTypes }) {
 
 
                 </form>
-                <button className='button create-btn'>Create!</button>
+                <button className='button create-btn' onClick={handleSubmit}>Create!</button>
                 <Link to='/pokemons'>
                     <button className='button'> Back To Home </button>
                 </Link>
             </div>
         ) : (
             <div className='success'>
+                <img className='successGif' src={pokemonCreado} alt="successGif" />
                 <h1>Success!</h1>
                 <Link to='/pokemons'>
                     <button className='button'> Back To Home </button>

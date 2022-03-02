@@ -5,25 +5,20 @@ import { Link } from 'react-router-dom'
 
 
 
-function SearchBar({ searchResults, getSearchResult, setSaveSearch, saveSearch }) {
+function SearchBar({ searchResults, getSearchResult, setSaveSearch, saveSearch, optionsSelected }) {
     const [search, setSearch] = useState('')
 
     useEffect(() => {
         if (typeof searchResults === 'string') return alert('No Results.')
     }, [searchResults])
 
-    // useEffect(() => {
-    //     if (!search && (saveSearch && saveSearch.length)) {
-    //         setSearch(saveSearch)
-    //     }
-    // }, [saveSearch, search])
-
     function handleChange(e) {
-        setSearch(e.target.value)
+		// se le pasa la string de busqueda y el objeto de filtros
+        setSearch(e.target.value, optionsSelected)
         setSaveSearch(e.target.value)
     }
 
-    function handleClear() {
+	function handleClear() {
         setSearch('')
         getSearchResult('')
         setSaveSearch('')
@@ -46,7 +41,8 @@ function SearchBar({ searchResults, getSearchResult, setSaveSearch, saveSearch }
 export default connect(
     state => ({
         searchResults: state?.searchResults,
-        saveSearch: state?.saveSearch
+        saveSearch: state?.saveSearch,
+		optionsSelected: state?.optionsSelected
     }),
 
     dispatch => ({

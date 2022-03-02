@@ -15,6 +15,7 @@ function Filters({
     const [type, setType] = useState('All')
     const [order, setOrder] = useState('Default')
     const [attack, setAttack] = useState('Default')
+    const [, setAllDefault] = useState(true)
 
 
     useEffect(() => {
@@ -24,13 +25,18 @@ function Filters({
     }, [typesFromDB, fetchAndMapTypes])
 
     useEffect(() => {
-        setOptionsSelected(isApi, isDataBase, type, order, attack)
+        // setAllDefault(false)
+        setOptionsSelected(
+            isApi === true ? 'true' : 'false',
+            isDataBase === true ? 'true' : 'false',
+            type, order, attack)
     }, [isApi, isDataBase, type, order, attack, setOptionsSelected])
 
     let id = 0
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        console.log(isApi)
         const filters = {
             isApi: isApi === true ? 'true' : 'false',
             isDataBase: isDataBase === true ? 'true' : 'false',
@@ -43,6 +49,12 @@ function Filters({
     }
 
     const handleClear = () => {
+        setIsApi(true)
+        setIsDataBase(true)
+        setAllDefault(true)
+        setType("All")
+        setOrder('Default')
+        setAttack('Default')
         if (saveSearch) {
             return getSearch(saveSearch)
         }
@@ -74,7 +86,7 @@ function Filters({
                 <span className="button-row">Sort by: </span>
                 <label>Type:</label>
                 <select name="Type" id='Types' onChange={e => setType(e.target.value)}>
-                    <option value="All">All</option>
+                    <option selected={type === 'All'} value="All">All</option>
                     {
                         typesFromDB?.map(t => <option key={id++} value={t}>{t}</option>)
                     }
@@ -83,7 +95,7 @@ function Filters({
 
                 <label>Order:</label>
                 <select name="Order" id="Order" onChange={e => setOrder(e.target.value)}>
-                    <option value="Default">Default</option>
+                    <option selected={order === 'Default'} value="Default">Default</option>
                     <option value="asc">A - Z</option>
                     <option value="desc">Z - A</option>
                 </select>
@@ -91,15 +103,16 @@ function Filters({
 
                 <label>Attack:</label>
                 <select name="Attack" id='attack' onChange={e => setAttack(e.target.value)}>
-                    <option value="Default">Default</option>
+                    <option selected={attack === 'Default'} value="Default">Default</option>
                     <option value="Stronger">Stronger First</option>
                     <option value="Weaker">Weaker First</option>
                 </select>
+                <br />
                 <button type="submit">Apply Filters</button>
-
+                <button onClick={handleClear}>Clear Filters</button>
             </div>
         </form>
-        <button onClick={handleClear}>Clear Filters</button>
+
     </Fragment>)
 }
 
