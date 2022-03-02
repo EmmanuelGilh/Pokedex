@@ -1,18 +1,18 @@
-const { Router } = require('express');
-const axios = require('axios');
-require('dotenv').config();
-const { Pokemon } = require('../db.js');
+// const { Router } = require('express');
+// const axios = require('axios');
+// require('dotenv').config();
+// const { Pokemon } = require('../db.js');
 
 
-const router = Router();
+// const router = Router();
 
-router.get('/', async (req, res) => {
-    try {
+// router.get('/', async (req, res) => {
+//     try {
 
-        res.send()
-    } catch (error) {
-        console.log(error)
-    }
-})
+//         res.send()
+//     } catch (error) {
+//         console.log(error)
+//     }
+// })
 
-module.exports = router;
+// module.exports = router;

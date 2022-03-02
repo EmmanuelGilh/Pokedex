@@ -6,9 +6,17 @@ const { Pokemon, Type } = require('../db.js');
 const router = Router();
 
 router.post('/', async (req, res) => {
-    const { name, hp, attack, defense, speed, height, weight, type, image } = req.body
+    const { name, hp, attack, defense, speed, height, weight, type: types, image } = req.body
 
-    let allTypes = await Promise.all(Type);
+    let typesFromDB = types.map(type => {
+        return Type.findOrCreate({
+            where: {
+                name: type
+            }
+        })
+    });
+
+    let allTypes = await Promise.all(typesFromDB);
     let pokemon = await Pokemon.create({
         name,
         hp,
@@ -17,8 +25,7 @@ router.post('/', async (req, res) => {
         speed,
         height,
         weight,
-        image,
-        type
+        image
     })
 
     allTypes.forEach(type => pokemon.setTypes(type[0]));
@@ -27,3 +34,5 @@ router.post('/', async (req, res) => {
 })
 
 module.exports = router;
+
+// 

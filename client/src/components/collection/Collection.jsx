@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { getAllPokes, getSearch, getDetails, setOptionsSelected } from '../../redux/actions'
 import Card from './Card'
@@ -11,10 +11,11 @@ import Footer from '../footer/Footer';
 function Collection({ pokemons, getAllPokes, searchResults, getDetails, optionsSelected }) {
 
     const [display, setDisplay] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [, setLoading] = useState(true);
     const [finalDisplay, setFinalDisplay] = useState([]) // display cortado
     const [page, setPage] = useState(1);
-    const [cardsPerPage] = useState(12);
+
+    const cardsPerPage = 12;
 
 
     //get inicial
@@ -27,10 +28,6 @@ function Collection({ pokemons, getAllPokes, searchResults, getDetails, optionsS
 
     //setea display
     useEffect(() => {
-        // if (display.length) {
-        //     return;
-        // }
-
         if (Array.isArray(searchResults) && searchResults.length) {
             return setDisplay(searchResults)
         }
@@ -39,45 +36,6 @@ function Collection({ pokemons, getAllPokes, searchResults, getDetails, optionsS
             return setDisplay(pokemons);
         }
     }, [pokemons, searchResults])
-
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////Sources and Filter functions ////////////////////////////////////////////////
-
-
-    // function filterAlpha(array) {
-    //     if (optionsSelected?.order === 'asc') {
-    //         let asc = [...array]
-    //         asc.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-    //         return asc;
-    //     }
-    //     else if (optionsSelected?.order === 'desc') {
-    //         let desc = [...array]
-    //         desc.sort((a, b) => b.name.toLowerCase().localeCompare(a.name.toLowerCase()))
-    //         return desc;
-    //     }
-    //     else return array
-    // }
-
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // useEffect(() => {
-    //     if (Array.isArray(searchResults) && searchResults.length) {
-    //         console.log('si')
-    //         let array = filterAlpha(array)
-    //         setDisplay(array)
-    //     }
-    //     else {
-    //         console.log("no")
-    //         let array = display
-    //         array = filterAlpha(array)
-    //         setDisplay(array)
-    //     }
-    // }, [searchResults, optionsSelected, filterAlpha, display])
-
-
 
 
     // Paginado
@@ -92,62 +50,45 @@ function Collection({ pokemons, getAllPokes, searchResults, getDetails, optionsS
 
     //loading
     useEffect(() => {
-        if (finalDisplay.length) {
+        if (Array.isArray(finalDisplay) && finalDisplay.length > 0) {
             return setLoading(false);
         }
         setLoading(true)
     }, [finalDisplay])
 
-    // useEffect(() => {
 
-    //     // else {
-    //     //     return setDisplay(pokemons);
-    //     // }
-    // }, [searchResults, display, pokemons])
+    function Body() {
+        if (Array.isArray(finalDisplay) && finalDisplay.length > 0 && typeof finalDisplay[0] !== 'string') {
+            return <>
+                <div className={styles.cards}>
+                    {
+                        finalDisplay.map(poke => <Card
+                            key={index++}
+                            id={poke.id}
+                            name={poke.name}
+                            image={poke.image}
+                            type={!!poke?.type ? poke.type.join(', ').toUpperCase() : ""}
+                            getDetails={getDetails}
+                        />)
+                    }
+                </div>
+                <Footer
+                    cardsPerPage={cardsPerPage}
+                    totalPosts={display?.length}
+                    paginate={paginate}
+                />
+            </>
+        }
 
+        if (Array.isArray(finalDisplay) && typeof finalDisplay[0] === 'string') {
+            return <p>{finalDisplay[0]}</p>
+        }
 
-
-
+        return <img src={pokeballGIF} alt='gif carga' />
+    }
 
     return (
-        <div>
-            {
-                loading ? (
-                    <img src={pokeballGIF}
-                        alt='gif carga' />
-                ) : (
-                    Array.isArray(finalDisplay) && finalDisplay.length > 0 ? (
-                        <>
-                            <div className={styles.cards}>
-                                {
-                                    finalDisplay.map(poke => <Card
-                                        key={index++}
-                                        id={poke.id}
-                                        name={poke.name}
-                                        image={poke.image}
-                                        type={!!poke?.type ? poke.type.join(', ').toUpperCase() : ""}
-                                        getDetails={getDetails}
-                                    // hp={poke.hp}
-                                    // attack={poke.attack}
-                                    // defense={poke.defense}
-                                    // speed={poke.speed}
-                                    // height={poke.height}
-                                    // weight={poke.weight}
-                                    />)
-                                }
-                            </div>
-                            <Footer
-                                cardsPerPage={cardsPerPage}
-                                totalPosts={display?.length}
-                                paginate={paginate}
-                            />
-                        </>
-                    ) : (
-                        <p> No Results.</p>
-                    )
-                )
-            }
-        </div>
+        <Body />
     )
 }
 

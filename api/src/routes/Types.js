@@ -27,11 +27,9 @@ router.get('/', async (req, res) => {
         await Type.bulkCreate(types)
         let response = await Type.findAll({ attributes: ['name'] })
 
-        console.log("entre a la pokeapi")
         res.json(reduceToString(response))
     }
     else {
-        console.log("respondi directo desde mi DB")
         res.json(reduceToString(allTypes))
     }
 })

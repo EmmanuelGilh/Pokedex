@@ -21,7 +21,7 @@ function DetailsPokes({ pokeDetails }) {
     }, [pokeDetails, id])
 
     return (
-        <div>
+        <div className={styles.bg}>
             {loading ? <img src={pokeballGIF} alt='gif carga' />
                 : (
                     <div className={styles.cardDetail}>

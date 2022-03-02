@@ -4,22 +4,70 @@ require('dotenv').config();
 const { Pokemon } = require('../db.js');
 
 
+
 const router = Router();
 
+
+function applyFilters(pokemons, type, order, attack) {
+    if (!Array.isArray(pokemons) || pokemons.length === 0) {
+        return pokemons
+    }
+
+    let arrayFiltrado = pokemons
+
+    if (type && type !== 'All') {
+        arrayFiltrado = arrayFiltrado.filter(p => p.type.includes(type))
+    }
+
+    if (order === 'asc') {
+        arrayFiltrado.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+    }
+    if (order === 'desc') {
+        arrayFiltrado.sort((a, b) => b.name.toLowerCase().localeCompare(a.name.toLowerCase()))
+    }
+
+    if (attack === 'Weaker') {
+        arrayFiltrado.sort((a, b) => parseInt(a.attack) - parseInt(b.attack))
+    }
+    if (attack === 'Stronger') {
+        arrayFiltrado.sort((a, b) => parseInt(b.attack) - parseInt(a.attack))
+    }
+    return arrayFiltrado
+}
+
 router.get('/', async (req, res) => {
-    const { name: nameQuery } = req.query
+    const { name: nameQuery,
+        isApi = isApi === undefined ? 'true' : isApi,
+        isDataBase = isDataBase === undefined ? 'true' : isDataBase,
+        type, order, attack } = req.query
 
     try {
 
-        const request = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=0&limit=40`)
+        let promesaCumplida;
 
-        let subrequest = request.data.results.map((pokemon) => axios.get(pokemon.url));
+        if (isApi === 'true') {
+            const request = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=0&limit=40`)
 
-        let promesaCumplida = await Promise.all(subrequest);
+            const subrequest = request.data.results.map((pokemon) => axios.get(pokemon.url));
+
+            promesaCumplida = await Promise.all(subrequest);
+        }
+
+
+        let requestDB;
+
+
+        if (isDataBase === 'true') {
+            requestDB = []
+        }
+
+        if (isApi === 'false' && isDataBase === 'false') {
+            return res.send(['No Pokemons Available.'])
+        }
+
+        promesaCumplida = requestDB.concat(promesaCumplida)
 
         if (nameQuery) {
-            // la funcion real de la search
-            // const findPokemon = promesaCumplida.filter(pokemon => pokemon.data.name.toLowerCase().includes(nameQuery.toLowerCase()))
             promesaCumplida = promesaCumplida.filter(pokemon => pokemon.data.name.toLowerCase().includes(nameQuery.toLowerCase()))
         }
 
@@ -42,7 +90,8 @@ router.get('/', async (req, res) => {
         });
 
 
-        res.send(promesaCumplida)
+
+        res.send(applyFilters(promesaCumplida, type, order, attack))
     } catch (error) {
         console.log(error)
     }

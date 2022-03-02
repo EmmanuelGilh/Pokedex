@@ -8,9 +8,20 @@ export const FETCH_TYPES = 'FETCH_TYPES'
 export const SET_OPTIONS = 'SET_OPTIONS'
 
 
-export function getAllPokes() {
+export function getAllPokes(filters) {
     return async dispatch => {
-        const request = await axios.get('http://localhost:3001/pokemons')
+
+        filters = {
+            isApi: filters?.isApi || true,
+            isDataBase: filters?.isDataBase || true,
+            ...filters
+        }
+
+        const stringFilters = new URLSearchParams(filters).toString()
+
+        const request = await axios.get(`http://localhost:3001/pokemons${stringFilters ? '?' + stringFilters : ''}`)
+        // const request = await axios.get(`http://localhost:3001/pokemons?attack=${filters.isApi || true}`)
+
         dispatch({ type: "GET_POKES", payload: request.data })
         console.log('despachado')
     }
@@ -23,10 +34,13 @@ export function getDetails(id) {
     }
 }
 
-export function getSearch(string) {
+export function getSearch(string, filters) {
     return async dispatch => {
+
+        const stringFilters = new URLSearchParams(filters).toString()
+
         if (string) {
-            const request = await axios.get(`http://localhost:3001/pokemons?name=${string}`)
+            const request = await axios.get(`http://localhost:3001/pokemons?name=${string}${stringFilters ? "&" + stringFilters : ''}`)
 
             if (request.data.length) {
                 dispatch({ type: 'GET_SEARCH', payload: request.data })
@@ -52,7 +66,6 @@ export function saveSearch(string) {
 export function fetchAndMapTypes() {
     return async dispatch => {
         const request = await axios.get('http://localhost:3001/Types')
-        console.log(request)
         let array = request.data
         // .map((type) => type.name).sort((a, b) =>
         //     a.localeCompare(b)).filter(filter => filter !== 'undefined')
@@ -60,11 +73,13 @@ export function fetchAndMapTypes() {
     };
 }
 
-export function setOptionsSelected(type, order, attack) {
+export function setOptionsSelected(isApi, isDataBase, type, order, attack) {
     return function (dispatch) {
         let obj = {}
         return (
             obj = {
+                isApi: isApi,
+                isDataBase: isDataBase,
                 type: type,
                 order: order,
                 attack: attack
