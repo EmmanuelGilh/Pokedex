@@ -66,6 +66,11 @@ function PokeCreator({ typesFromDB, fetchAndMapTypes }) {
         const select = document.getElementById('type')
         const value = select.options[select.selectedIndex].value;
 
+
+        if (types.includes(value)) {
+            return alert('Type already on use')
+        }
+
         setTypes([...types, value])
 
     }

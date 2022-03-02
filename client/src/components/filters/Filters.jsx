@@ -36,7 +36,6 @@ function Filters({
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(isApi)
         const filters = {
             isApi: isApi === true ? 'true' : 'false',
             isDataBase: isDataBase === true ? 'true' : 'false',
