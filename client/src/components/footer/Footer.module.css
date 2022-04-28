@@ -1,4 +1,6 @@
-.pagination{
+.pagination {
+    position: relative;
+    text-align: center;
     background-color: #cac8c8;
     color: rgb(0, 0, 0);
     border: 1px solid #ddd;
@@ -7,11 +9,11 @@
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     justify-content: center;
-    margin: 0 4px; 
+    margin: 0 4px;
     text-align: justify;
     cursor: pointer;
 }
 
-.pagination:hover{
+.pagination:hover {
     background-color: rgb(138, 138, 138)
 }

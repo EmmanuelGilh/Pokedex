@@ -13,12 +13,12 @@ function SearchBar({ searchResults, getSearchResult, setSaveSearch, saveSearch, 
     }, [searchResults])
 
     function handleChange(e) {
-		// se le pasa la string de busqueda y el objeto de filtros
+        // se le pasa la string de busqueda y el objeto de filtros
         setSearch(e.target.value, optionsSelected)
         setSaveSearch(e.target.value)
     }
 
-	function handleClear() {
+    function handleClear() {
         setSearch('')
         getSearchResult('')
         setSaveSearch('')
@@ -42,7 +42,7 @@ export default connect(
     state => ({
         searchResults: state?.searchResults,
         saveSearch: state?.saveSearch,
-		optionsSelected: state?.optionsSelected
+        optionsSelected: state?.optionsSelected
     }),
 
     dispatch => ({

@@ -118,7 +118,7 @@ function PokeCreator({ typesFromDB, fetchAndMapTypes }) {
     return (
         (editing) ? (
             <div className={styles.mainstudio} >
-                <h3 className='creation-title'>Pokemon Creation LAB</h3>
+                <h3 className={styles.creationTitle}>Pokemon Creation LAB</h3>
                 <p className='alert'>**All fields are required.</p>
                 <form className='form'>
                     <br />
@@ -187,7 +187,12 @@ function PokeCreator({ typesFromDB, fetchAndMapTypes }) {
                 </Link>
             </div>
         ) : (
-            <div className='success'>
+            <div className={styles.success}>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
                 <img className='successGif' src={pokemonCreado} alt="successGif" />
                 <h1>Success!</h1>
                 <Link to='/pokemons'>

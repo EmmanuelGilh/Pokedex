@@ -77,7 +77,7 @@ function Collection({ pokemons, getAllPokes, searchResults, getDetails, optionsS
                         />)
                     }
                 </div>
-                <Footer
+                <Footer class="text-center"
                     cardsPerPage={cardsPerPage}
                     totalPosts={display?.length}
                     paginate={paginate}

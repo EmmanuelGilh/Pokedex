@@ -8,7 +8,7 @@ export default function Footer({ cardsPerPage, totalPosts, paginate }) {
     }
 
     return (
-        <div>
+        <div class="text-center">
             <div>
                 {pageNumbers.map(number => (
                     <span className={styles.pagination}

@@ -31,6 +31,14 @@ function DetailsPokes({ pokeDetails }) {
 
     return (
         <div className={styles.bg}>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
             {loading ? <img src={pokeballGIF} alt='gif carga' />
                 : (
                     <div className={styles.cardDetail}>
@@ -51,6 +59,7 @@ function DetailsPokes({ pokeDetails }) {
                     </div>
                 )
             }
+            <br />
             <div>
                 <Link to="/pokemons">
                     <button className='button' > Back to Home </button>
